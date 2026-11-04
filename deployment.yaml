@@ -18,8 +18,9 @@ spec:
       labels:
         app: lab14-app
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
-        - name: lab14-app
           image: lab14-cicd:local
           imagePullPolicy: IfNotPresent
           ports:
