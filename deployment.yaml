@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lab14
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab14-app
+  namespace: lab14
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lab14-app
+  template:
+    metadata:
+      labels:
+        app: lab14-app
+    spec:
+      containers:
+        - name: lab14-app
+          image: lab14-cicd:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lab14-app
+  namespace: lab14
+spec:
+  type: NodePort
+  selector:
+    app: lab14-app
+  ports:
+    - port: 80
+      targetPort: 8000
+      nodePort: 30014
