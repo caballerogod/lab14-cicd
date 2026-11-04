@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: lab14
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -21,8 +22,9 @@ spec:
       imagePullSecrets:
         - name: ghcr-secret
       containers:
-          image: lab14-cicd:local
-          imagePullPolicy: IfNotPresent
+        - name: lab14-app
+          image: ghcr.io/caballerogod/lab14-cicd:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           readinessProbe:
@@ -37,6 +39,7 @@ spec:
               port: 8000
             initialDelaySeconds: 10
             periodSeconds: 10
+
 ---
 apiVersion: v1
 kind: Service
